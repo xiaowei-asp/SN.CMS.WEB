@@ -20,13 +20,12 @@ axios.interceptors.response.use(function(response) {
             }
             return Promise.reject('error')
         } else {
-            return response.data
+            return response;
         }
     },
     function(error) {
-        var exjson = err.responseJson;
-		alert(exjson.message);
-        //location.href = "../login.html";
+        console.log(error.response);
+        location.href = "../login.html";
         return Promise.reject(error)
     }
 )
