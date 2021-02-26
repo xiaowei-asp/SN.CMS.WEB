@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<div class="login">
+<div class="login" id="app">
 	<div class="container-login100">
 		<div class="wrap-login100">
 			<div class="login100-pic js-tilt" data-tilt>
@@ -27,7 +27,7 @@
 				</span>
 
 				<div class="wrap-input100 validate-input">
-					<input class="input100" type="text" name="userName" value="snadmin" placeholder="用户名">
+					<input class="input100" type="text" v-model="user.userName" placeholder="用户名">
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-envelope" aria-hidden="true"></i>
@@ -35,7 +35,7 @@
 				</div>
 
 				<div class="wrap-input100 validate-input">
-					<input class="input100" type="password" name="pass" value="snadmin" placeholder="密码">
+					<input class="input100" type="password" v-model="user.pass" placeholder="密码">
 					<span class="focus-input100"></span>
 					<span class="symbol-input100">
 						<i class="fa fa-lock" aria-hidden="true"></i>
@@ -43,7 +43,7 @@
 				</div>
 				
 				<div class="container-login100-form-btn">
-					<button class="login100-form-btn" onclick="method.login()">
+					<button class="login100-form-btn" @click="login()">
 						登陆
 					</button>
 				</div>
@@ -68,63 +68,49 @@
 
 <script src="js/startup.js"></script>
 <script src="js/axios.js"></script>
-<script src="js/jquery.min.js"></script>
+<script src="js/vue.js"></script>
 
 <script>
-	var param = {
-
-	};
-
-	var method = {
-		init:function(){
-			method.eventBind();
+	var vue = new Vue({
+		el:"#app",
+		data:{
+			user:{
+				userName:"snadmin",
+				pass:"snadmin"
+			}
 		},
-		eventBind:function(){
-			$("#btnLogin").click(function(){
-				method.login();
-			})
-		},
-
-		login:function(){
-			var userName = $("input[name='userName']").val();
-			var pass = $("input[name='pass']").val();
-
-			var json = {
-				name:userName,
-				password:pass
-			};
+		created:function(){
 			
-			axios({
-                method: "POST",
-                url: urlConfig.identityUrl+"/sign-in",
-                data: JSON.stringify(json),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(function (response) {
-				var res = response.data;
-                if(!res.isError){
-					setToken(res.data.accessToken);
-					location.href = "index.html";
-				}
-				else
-					alert(res.message);
+		},
+		methods:{
+			login:function(){
+				var json = {
+					name:this.user.userName,
+					password:this.user.pass
+				};
+				axios({
+					method: "POST",
+					url: urlConfig.identityUrl+"/sign-in",
+					data: JSON.stringify(json),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+					}).then(function (response) {
+						var res = response.data;
+						if(!res.isError){
+							setToken(res.data.accessToken);
+							location.href = "index.html";
+						}
+						else
+							alert(res.message);
 
-            }).catch(function (err) {
-				var result = err.response;
-				alert(result.data.message);
-            });
+					}).catch(function (err) {
+						var result = err.response;
+						alert(result.data.message);
+					});
+			}
 		}
-
-	};
-
-	// document.addEventListener('DOMContentLoaded', (event) => {
-	// 	method.init();
-	// });
-	$(document).ready(function(){
-		method.init();
 	});
-
 </script>
 </body>
 </html>

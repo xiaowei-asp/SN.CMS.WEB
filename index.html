@@ -14,51 +14,46 @@
 </head>
 
 <body>
-    <div>
-        欢迎来到神农集团首页 
+    <div id ="app">
+        欢迎 【 {{user.userName}}】来到神农集团首页 
     </div>
-    <script src="js/jquery.min.js"></script>
+    <script src="js/vue.js"></script>
     <script src="js/startup.js"></script>
     <script src="js/axios.js"></script>
     <script src="js/request.js"></script>
     <script>
-        var param = {
-
-        };
-
-        var method = {
-            init: function () {
-                method.eventBind();
-                method.getUserInfo();
+        var vue = new Vue({
+            el:"#app",
+            data:{
+                user:{
+                    userId:"",
+                    userName:""
+                }
             },
-            eventBind: function () {
-
+            created:function(){
+                this.getUserInfo();
             },
-            getUserInfo: function () {
-                axios({
-                    method: "GET",
-                    url: urlConfig.identityUrl + "/me",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(function (response) {
-                    var res = response.data;
-                    if(!res.isError){
-                        location.href = "https://ynsnjt.com/Home/Intro";
-                    }
-                    else{
+            methods:{
+                getUserInfo:function () {
+                    axios({
+                        method: "GET",
+                        url: urlConfig.identityUrl + "/me",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(function (response) {
+                        var res = response.data;
+                        if(!res.isError){
+                            vue._data.user.userName = res.data;
+                        }
+                        else{
+                            
+                        }
+                    }).catch(function (err) {
 
-                    }
-                    
-
-                }).catch(function (err) {
-
-                });
+                    });
+                }
             }
-        };
-
-        $(document).ready(function () {
-            method.init();
         });
     </script>
 </body>
