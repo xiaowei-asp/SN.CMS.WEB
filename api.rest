@@ -1,0 +1,23 @@
+### Sign up as admin
+POST http://localhost:7001/api/sign-up
+content-type: application/json
+
+{
+	"name": "snadmin3",
+	"password": "snadmin",
+	"role": "admin"
+}
+
+### Sign in as admin
+POST http://localhost:7001/api/sign-in
+content-type: application/json
+
+{
+	"name": "snadmin",
+	"password": "snadmin"
+}
+
+### Sign up as admin
+
+GET http://localhost:7001/api/me
+authorization: Bearer {{accessToken}}
